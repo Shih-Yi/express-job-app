@@ -11,7 +11,7 @@ import jobsRouter from './routes/jobsRoutes.js';
 
 // middleware
 import notFoundMiddleware from './middleware/not-found.js';
-import errorHandleMiddleare from './middleware/error-handler.js';
+import errorHandleMiddleware from './middleware/error-handler.js';
 
 app.use(express.json())
 
@@ -23,7 +23,7 @@ app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/jobs', jobsRouter)
 
 app.use(notFoundMiddleware);
-app.use(errorHandleMiddleare);
+app.use(errorHandleMiddleware);
 
 const port = process.env.PORT || 3001;
 
