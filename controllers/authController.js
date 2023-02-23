@@ -50,8 +50,29 @@ const login = async (req, res) => {
 }
 
 const updateUser = async (req, res) => {
-  console.log(req.user)
-  res.send('update user')
+  const { email, name, lastName, location } = req.body
+  if (!email || !name || !lastName || !location) {
+    throw new BadRequestError('Please provide all values')
+  }
+
+  const user = await User.findOne({ _id: req.user.userId })
+
+  user.email = email
+  user.name = name
+  user.lastName = lastName
+  user.location = location
+
+  // or user.findOneAndUpdate => won't call UserSchema.pre('save'
+  await user.save()
+
+  // if other properties included, must re-generate
+  // this case I re-generate anyway
+  const token = user.createJWT()
+  res.status(StatusCodes.OK).json({
+    user,
+    token,
+    location: user.location,
+  })
 }
 
 export { register, login, updateUser }
