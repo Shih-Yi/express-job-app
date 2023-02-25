@@ -21,6 +21,7 @@ import jobsRouter from './routes/jobsRoutes.js'
 import notFoundMiddleware from './middleware/not-found.js'
 import errorHandleMiddleware from './middleware/error-handler.js'
 import authenticateUser from './middleware/auth.js'
+import cookieParser from 'cookie-parser'
 
 if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'))
@@ -30,6 +31,7 @@ app.use(express.json())
 app.use(helmet())
 app.use(xss())
 app.use(mongoSanitize())
+app.use(cookieParser())
 
 app.get('/', (req, res) => {
   res.send('Welcome!')
