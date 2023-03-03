@@ -1,5 +1,7 @@
 import express from 'express'
+import vhost from 'vhost'
 const app = express()
+const map = express()
 import 'express-async-errors'
 import morgan from 'morgan'
 import dotenv from 'dotenv'
@@ -35,6 +37,14 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 
 // only when ready to deploy
 app.use(express.static(path.resolve(__dirname, './client/build')))
+map.use(express.static(path.resolve(__dirname, './client_new/build')))
+
+const domain =
+  process.NODE_ENV === 'production'
+    ? 'express-job-app.onrender.com'
+    : 'mysite.local'
+
+app.use(vhost(`map.${domain}`, map))
 
 app.use(express.json())
 app.use(helmet())
@@ -45,9 +55,26 @@ app.use(cookieParser())
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/jobs', authenticateUser, jobsRouter)
 
+// app.get('/', (req, res) => {
+//   res.send('Welcome!')
+// })
+
+map.get('/api2', (req, res) => {
+  // res.send('Welcome!')
+  res.json({ msg: 'Welcome to api2' })
+})
+
+// map.get('/', (req, res) => {
+//   console.log(req.headers)
+//   res.send('here is the MAP subdomain')
+// })
 // only when ready to deploy
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, './client/build', 'index.html'))
+})
+
+map.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, './client_new/build', 'index.html'))
 })
 
 app.use(notFoundMiddleware)
