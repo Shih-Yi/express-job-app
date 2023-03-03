@@ -40,9 +40,7 @@ app.use(express.static(path.resolve(__dirname, './client/build')))
 map.use(express.static(path.resolve(__dirname, './client_new/build')))
 
 const domain =
-  process.NODE_ENV === 'production'
-    ? 'express-job-app.onrender.com'
-    : 'mysite.local'
+  process.NODE_ENV === 'production' ? 'walksinfo.co.nz' : 'mysite.local'
 
 app.use(vhost(`map.${domain}`, map))
 
