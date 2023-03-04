@@ -86,9 +86,9 @@ const start = async () => {
     app.listen(port, () => {
       console.log(`Server is listening on port ${port}...`)
     })
-    map.listen(3001, () => {
-      console.log(`Server is listening on port 3001...`)
-    })
+    // map.listen(3001, () => {
+    //   console.log(`Server is listening on port 3001...`)
+    // })
   } catch (error) {
     console.log(error)
   }
