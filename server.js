@@ -33,26 +33,22 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'))
 }
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-
-// only when ready to deploy
-app.use(express.static(path.resolve(__dirname, './client/build')))
-// test.use(express.static(path.resolve(__dirname, './client_new/build')))
-
-const domain = process.NODE_ENV === 'production' ? 'walksinfo.co.nz' : 'loca.lt'
-
-const test = express.Router()
-test.get('/aaa', (req, res) => {
-  res.send('Hello from test subdomain!')
-})
-
-app.use(vhost(`test.${domain}`, test))
-
 app.use(express.json())
 app.use(helmet())
 app.use(xss())
 app.use(mongoSanitize())
 app.use(cookieParser())
+
+const domain =
+  process.env.NODE_ENV === 'production' ? process.env.DOMAIN : 'loca.lt'
+
+const test = express.Router()
+app.use(vhost(`test.${domain}`, test))
+
+// only when ready to deploy
+const __dirname = dirname(fileURLToPath(import.meta.url))
+app.use(express.static(path.resolve(__dirname, './client/build')))
+test.use(express.static(path.resolve(__dirname, './client_new/build')))
 
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/jobs', authenticateUser, jobsRouter)
