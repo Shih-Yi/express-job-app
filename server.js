@@ -1,7 +1,7 @@
 import express from 'express'
 import vhost from 'vhost'
 const app = express()
-const map = express()
+const water = express()
 import 'express-async-errors'
 import morgan from 'morgan'
 import dotenv from 'dotenv'
@@ -37,12 +37,11 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 
 // only when ready to deploy
 app.use(express.static(path.resolve(__dirname, './client/build')))
-map.use(express.static(path.resolve(__dirname, './client_new/build')))
+water.use(express.static(path.resolve(__dirname, './client_new/build')))
 
-const domain =
-  process.NODE_ENV === 'production' ? 'walksinfo.co.nz' : 'mysite.local'
+const domain = process.NODE_ENV === 'production' ? 'walksinfo.co.nz' : 'loca.lt'
 
-app.use(vhost(`map.${domain}`, map))
+app.use(vhost(`water.${domain}`, water))
 
 app.use(express.json())
 app.use(helmet())
@@ -57,21 +56,23 @@ app.use('/api/v1/jobs', authenticateUser, jobsRouter)
 //   res.send('Welcome!')
 // })
 
-map.get('/api2', (req, res) => {
+water.get('/api2', (req, res) => {
   // res.send('Welcome!')
   res.json({ msg: 'Welcome to api2' })
 })
 
-// map.get('/', (req, res) => {
+// water.get('/', (req, res) => {
 //   console.log(req.headers)
-//   res.send('here is the MAP subdomain')
+//   res.send('here is the water subdomain')
 // })
 // only when ready to deploy
 app.get('*', (req, res) => {
+  console.log('app--------')
   res.sendFile(path.resolve(__dirname, './client/build', 'index.html'))
 })
 
-map.get('*', (req, res) => {
+water.get('*', (req, res) => {
+  console.log('water--------')
   res.sendFile(path.resolve(__dirname, './client_new/build', 'index.html'))
 })
 
@@ -86,7 +87,7 @@ const start = async () => {
     app.listen(port, () => {
       console.log(`Server is listening on port ${port}...`)
     })
-    // map.listen(3001, () => {
+    // water.listen(3001, () => {
     //   console.log(`Server is listening on port 3001...`)
     // })
   } catch (error) {
