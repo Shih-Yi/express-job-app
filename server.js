@@ -1,7 +1,7 @@
 import express from 'express'
 import vhost from 'vhost'
 const app = express()
-const test = express()
+
 import 'express-async-errors'
 import morgan from 'morgan'
 import dotenv from 'dotenv'
@@ -37,9 +37,14 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 
 // only when ready to deploy
 app.use(express.static(path.resolve(__dirname, './client/build')))
-test.use(express.static(path.resolve(__dirname, './client_new/build')))
+// test.use(express.static(path.resolve(__dirname, './client_new/build')))
 
 const domain = process.NODE_ENV === 'production' ? 'walksinfo.co.nz' : 'loca.lt'
+
+const test = express.Router()
+test.get('/aaa', (req, res) => {
+  res.send('Hello from test subdomain!')
+})
 
 app.use(vhost(`test.${domain}`, test))
 
@@ -59,6 +64,10 @@ app.use('/api/v1/jobs', authenticateUser, jobsRouter)
 test.get('/api2', (req, res) => {
   // res.send('Welcome!')
   res.json({ msg: 'Welcome to api2' })
+})
+
+test.get('/about', (req, res) => {
+  res.send('This is the about page of the test subdomain')
 })
 
 // test.get('/', (req, res) => {
