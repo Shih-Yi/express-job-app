@@ -1,9 +1,8 @@
-import Landing from './assets/pages/Landing'
+import Landing from './pages/Landing'
 
 function App() {
   return (
     <div>
-      <h1>app</h1>
       <Landing />
     </div>
   )
