@@ -1,5 +1,5 @@
-import Landing from './pages/Landing'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
+import { Dashboard, Landing, Register, Error } from './pages'
 
 function App() {
   return (
@@ -10,10 +10,10 @@ function App() {
         <Link to="/landing">Home</Link>
       </nav>
       <Routes>
-        <Route path="/" element={<div>Dashboard</div>} />
-        <Route path="/register" element={<div>Register</div>} />
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/landing" element={<Landing />} />
-        <Route path="*" element={<div>Error</div>} />
+        <Route path="*" element={<Error />} />
       </Routes>
     </BrowserRouter>
   )
