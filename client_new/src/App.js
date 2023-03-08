@@ -4,11 +4,6 @@ import { Dashboard, Landing, Register, Error } from './pages'
 function App() {
   return (
     <BrowserRouter>
-      <nav>
-        <Link to="/">Dashboard</Link>
-        <Link to="/register">Register</Link>
-        <Link to="/landing">Home</Link>
-      </nav>
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/register" element={<Register />} />
