@@ -1,12 +1,7 @@
 import { Sequelize } from 'sequelize'
+import config from '../config/config.js'
 
-const sequelize = new Sequelize({
-  dialect: 'postgres',
-  database: 'express_job_dev',
-  username: 'sychien',
-  host: 'localhost',
-  port: 5432,
-})
+const sequelize = new Sequelize(config.development)
 
 const connectPgDB = async (sequelize) => {
   try {

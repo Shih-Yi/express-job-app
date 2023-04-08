@@ -17,7 +17,8 @@ import xss from 'xss-clean'
 import mongoSanitize from 'express-mongo-sanitize'
 
 // db
-import connectDB from './db/connect.js'
+// import connectDB from './db/connect.js'
+import { connectPgDB, sequelize } from './db/pgConnect.js'
 
 // routers
 import authRouter from './routes/authRoutes.js'
@@ -88,7 +89,7 @@ const port = process.env.PORT || 3001
 
 const start = async () => {
   try {
-    await connectDB(process.env.MONGO_URL)
+    await connectPgDB(sequelize)
     app.listen(port, () => {
       console.log(`Server is listening on port ${port}...`)
     })
