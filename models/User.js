@@ -1,63 +1,65 @@
-import mongoose from 'mongoose'
-import validator from 'validator'
-import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
+import { DataTypes } from 'sequelize'
+import { sequelize } from '../db/pgConnect.js'
 
-const UserSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, 'Please provide name'],
-    minlength: 3,
-    maxlength: 20,
-    trim: true,
-  },
-  email: {
-    type: String,
-    required: [true, 'Please provide email'],
-    validate: {
-      validator: validator.isEmail,
-      message: 'Please provide a valid email',
+const User = sequelize.define(
+  'User',
+  {
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      trim: true,
+      validate: {
+        len: [3, 30],
+        notNull: {
+          msg: 'Please provide Name',
+        },
+      },
     },
-    unique: true,
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate: {
+        isEmail: {
+          args: true,
+          msg: 'Invalid email format',
+        },
+        notNull: {
+          msg: 'Please provide Email',
+        },
+      },
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [3, 30],
+        notNull: {
+          msg: 'Please provide Password',
+        },
+      },
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      trim: true,
+      defaultValue: 'lastName',
+      validate: {
+        len: [3, 20],
+      },
+    },
+    location: {
+      type: DataTypes.STRING,
+      trim: true,
+      defaultValue: 'Big City',
+      validate: {
+        len: [3, 20],
+      },
+    },
   },
-  password: {
-    type: String,
-    required: [true, 'Please provide password'],
-    minlength: 6,
-    select: false,
+  {
+    sequelize,
+    modelName: 'User',
   },
-  lastName: {
-    type: String,
-    trim: true,
-    maxlength: 20,
-    default: 'lastName',
-  },
-  location: {
-    type: String,
-    trim: true,
-    maxlength: 20,
-    default: 'my city',
-  },
-})
+)
 
-UserSchema.pre('save', async function () {
-  // check which field is updated
-  console.log(this.modifiedPaths())
-  if (!this.isModified('password')) return
-
-  const salt = await bcrypt.genSalt(10)
-  this.password = await bcrypt.hash(this.password, salt)
-})
-
-UserSchema.methods.createJWT = function () {
-  return jwt.sign({ userId: this._id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_LIFETIME,
-  })
-}
-
-UserSchema.methods.comparePassword = async function (candidatePassword) {
-  const isMatch = await bcrypt.compare(candidatePassword, this.password)
-  return isMatch
-}
-
-export default mongoose.model('User', UserSchema)
+export default User
